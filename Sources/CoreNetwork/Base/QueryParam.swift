@@ -12,7 +12,6 @@ public protocol QueryParamEncodable {
 }
 
 extension QueryParamEncodable {
-    
      var asDictionar: [String: Any] {
         let mirror = Mirror(reflecting: self)
         let dict = Dictionary(uniqueKeysWithValues: mirror.children.lazy.map({ (label:String?, value:Any) -> (String, Any)? in

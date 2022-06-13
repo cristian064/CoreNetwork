@@ -15,16 +15,16 @@ extension RestAPI {
             let responseCodable = try JSONDecoder().decode(ResponseCodable.self, from: data)
             completion(.success(responseCodable))
         }catch {
-            completion(.failure(.init(error: error)))
+            completion(.failure(.jsonDecoderError))
         }
     }
     
-    func encode<RequestEncodable>(paramBody: RequestEncodable) -> Data? where RequestEncodable: Codable {
+    func encode<RequestEncodable>(paramBody: RequestEncodable) throws -> Data? where RequestEncodable: Codable {
         do {
             let encode = try JSONEncoder().encode(paramBody)
             return encode
         } catch {
-            return nil
+            throw NetworkError.jsonEncoderError
         }
         
     }
@@ -35,7 +35,7 @@ extension RestAPI {
         let session = SessionManager.shared.session
         session.dataTask(with: urlRequest) { data, urlResponse, error in
             if let error = error {
-                completion(.failure(.init(error: error)))
+                completion(.failure(.dataTaskError(error)))
                 return
             }
             guard let data = data else{

@@ -10,31 +10,22 @@ import Foundation
 
 public extension RestAPI {
     
-    func request<ResponseCodable, QueryParam>(with requestUrl: String,
-                                  queryParam: QueryParam,
-                                  completion: @escaping (ResponseAPI<ResponseCodable>) -> Void) where ResponseCodable: Codable, QueryParam: QueryParamEncodable{
-                    
-        guard let url = getURLFromComponent(with: requestUrl, queryParam: queryParam) else {
-            completion(.failure(.init(code: 9000)))
-            return
-        }
-        let request = URLRequest(url: url)
-        sessionRequest(with: request, completion: completion)
-    }
-    
     func request<ResponseCodable, QueryParam, ParamBody>(with requestUrl: String,
                                                          httpMethod: HttpVerb,
                                                          queryParam: QueryParam,
                                                          paramBody: ParamBody,
                                                          completion: @escaping (ResponseAPI<ResponseCodable>) -> Void) where ResponseCodable: Codable, QueryParam: QueryParamEncodable, ParamBody: Codable{
         guard let url = getURLFromComponent(with: requestUrl, queryParam: queryParam) else {
-            completion(.failure(.init(code: 9000)))
+            completion(.failure(.invalidURL))
             return
         }
         var request = URLRequest(url: url)
         request.httpMethod = httpMethod.rawValue
-        request.httpBody = encode(paramBody: paramBody)
-        
+        do {
+            request.httpBody = try encode(paramBody: paramBody)
+        }catch {
+            completion(.failure(.jsonEncoderError))
+        }
         sessionRequest(with: request, completion: completion)
         
     }
@@ -45,12 +36,16 @@ public extension RestAPI {
                                              completion: @escaping (ResponseAPI<ResponseCodable>) -> Void) where ResponseCodable: Codable, ParamBody: Codable{
         guard let url = URL(string: requestUrl) else
         {
-            completion(.failure(.init(code: 9000)))
+            completion(.failure(.invalidURL))
             return
         }
         var request = URLRequest(url: url)
         request.httpMethod = httpMethod.rawValue
-        request.httpBody = encode(paramBody: paramBody)
+        do {
+            request.httpBody = try encode(paramBody: paramBody)
+        }catch {
+            completion(.failure(.jsonEncoderError))
+        }
         
         sessionRequest(with: request, completion: completion)
         
