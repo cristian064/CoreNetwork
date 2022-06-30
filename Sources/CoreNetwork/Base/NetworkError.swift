@@ -12,4 +12,5 @@ public enum NetworkError: Error {
     case jsonDecoderError
     case jsonEncoderError
     case dataTaskError(Error)
+    case invalidResponse
 }

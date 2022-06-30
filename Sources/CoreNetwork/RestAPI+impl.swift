@@ -51,4 +51,15 @@ public extension RestAPI {
         
     }
     
+    func request<ResponseCodable: Codable>(with requestUrl: String,
+                                           httpMethod: HttpVerb) async throws -> ResponseCodable {
+        guard let url = URL(string: requestUrl) else
+        {
+            throw NetworkError.invalidURL
+        }
+        var request = URLRequest(url: url)
+        request.httpMethod = httpMethod.rawValue
+        return try await sessionRequest(with: request)
+    }
+    
 }
