@@ -59,7 +59,12 @@ public extension RestAPI {
         }
         var request = URLRequest(url: url)
         request.httpMethod = httpMethod.rawValue
-        return try await sessionRequest(with: request)
+        
+        return try await withCheckedThrowingContinuation({ continuation in
+            sessionRequest(with: request) { (response: ResponseAPI<ResponseCodable>)  in
+                continuation.resume(responseAPI: response)
+            }
+        })
     }
     
 }

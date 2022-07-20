@@ -21,3 +21,17 @@ extension URLSession {
         }
     }
 }
+
+extension CheckedContinuation {
+    func resume(responseAPI: ResponseAPI<T>) {
+        switch responseAPI {
+        case .success(let response):
+            self.resume(returning: response)
+        case .failure(let error):
+            guard let error = error as? E else { return }
+            self.resume(throwing: error)
+        }
+    }
+}
+
+
