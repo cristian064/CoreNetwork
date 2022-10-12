@@ -67,4 +67,16 @@ public extension RestAPI {
         })
     }
     
+    func request<ResponseCodable: Codable>(with requestUrl: String,
+                                           httpMethod: HttpVerb,
+                                           completion: @escaping (ResponseAPI<ResponseCodable>)) {
+        guard let url = URL(string: requestUrl) else {
+            completion(.failure(.invalidURL))
+            return
+        }
+        var request = URLRequest(url: url)
+        request.httpMethod = httpMethod.rawValue
+        sessionRequest(with: request, completion: completion)
+    }
+    
 }
