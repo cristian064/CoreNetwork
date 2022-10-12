@@ -18,9 +18,9 @@ public protocol RestAPI {
                                              paramBody: ParamBody,
                                              completion: @escaping (ResponseAPI<ResponseCodable>) -> Void) where ResponseCodable: Codable, ParamBody: Codable
     
-    func request<ResponseCodable: Codable>(with requestUrl: String,
-                                           httpMethod: HttpVerb,
-                                           completion: @escaping (ResponseAPI<ResponseCodable>))
+    func request<ResponseCodable>(with requestUrl: String,
+                                  httpMethod: HttpVerb,
+                                  completion: @escaping (ResponseAPI<ResponseCodable>) -> Void)
     
     func request<ResponseCodable: Codable>(with requestUrl: String,
                                            httpMethod: HttpVerb) async throws -> ResponseCodable

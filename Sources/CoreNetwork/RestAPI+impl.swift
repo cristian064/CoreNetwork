@@ -67,9 +67,9 @@ public extension RestAPI {
         })
     }
     
-    func request<ResponseCodable: Codable>(with requestUrl: String,
-                                           httpMethod: HttpVerb,
-                                           completion: @escaping (ResponseAPI<ResponseCodable>)) {
+    func request<ResponseCodable>(with requestUrl: String,
+                                  httpMethod: HttpVerb,
+                                  completion: @escaping (ResponseAPI<ResponseCodable>) -> Void) where ResponseCodable: Codable {
         guard let url = URL(string: requestUrl) else {
             completion(.failure(.invalidURL))
             return
