@@ -20,7 +20,7 @@ public protocol RestAPI {
     
     func request<ResponseCodable>(with requestUrl: String,
                                   httpMethod: HttpVerb,
-                                  completion: @escaping (ResponseAPI<ResponseCodable>) -> Void) where ResponseCodable: Codable
+                                  completion: @escaping (ResponseAPI<ResponseCodable>) -> Void) where ResponseCodable: Decodable
     
     func request<ResponseCodable: Codable>(with requestUrl: String,
                                            httpMethod: HttpVerb) async throws -> ResponseCodable

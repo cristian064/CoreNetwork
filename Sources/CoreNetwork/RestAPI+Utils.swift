@@ -10,7 +10,7 @@ import GenericUtilities
 
 extension RestAPI {
     func decode<ResponseCodable>(data: Data,
-                                         completion: @escaping (ResponseAPI<ResponseCodable>) -> Void) where ResponseCodable: Codable {
+                                         completion: @escaping (ResponseAPI<ResponseCodable>) -> Void) where ResponseCodable: Decodable {
         do{
             let responseCodable = try JSONDecoder().decode(ResponseCodable.self, from: data)
             completion(.success(responseCodable))
@@ -40,7 +40,7 @@ extension RestAPI {
     
     
     func sessionRequest<ResponseCodable>(with urlRequest: URLRequest,
-                                                 completion: @escaping (ResponseAPI<ResponseCodable>) -> Void) where ResponseCodable: Codable {
+                                                 completion: @escaping (ResponseAPI<ResponseCodable>) -> Void) where ResponseCodable: Decodable {
         let session = SessionManager.shared.session
         session.dataTask(with: urlRequest) { data, urlResponse, error in
             if let error = error {
